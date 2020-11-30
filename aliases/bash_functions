@@ -1,0 +1,550 @@
+# to export these functions in other shell scripts
+# set -a
+
+cl () 
+{ 
+    pushd $1 > /dev/null;
+    ls --color=auto
+}
+connectToiBall () 
+{ 
+    bt-device -c 95:B3:8D:C6:8D:E8;
+    bt-device -l;
+    bt-audio -c 95:B3:8D:C6:8D:E8;
+    pacmd
+}
+convert_to_date () 
+{ 
+    date -ud @$1
+}
+copylines () 
+{ 
+    sed -n $1,$2p $3 | DISPLAY=:0 xclip -selection clipboard
+}
+cpline () 
+{ 
+    sed -n $1,$1p $2 | DISPLAY=:0 xclip -selection clipboard
+}
+createbbrepo () 
+{ 
+    read -p 'Repo name?' reponame;
+    read -p 'is_private' is_private;
+    mkdir $reponame;
+    cd $reponame;
+    git init;
+    echo my project $reponame > README;
+    git add -A;
+    git commit -m "Initial Commit";
+    read -p 'Username?' username;
+    read -p 'Password?' -s password;
+    echo 'creating repo';
+    curl --user $username:$password https://api.bitbucket.org/1.0/repositories/ --data name=$reponame --data is_private='$isprivate';
+    echo 'adding remote origin';
+    git remote add origin https://$usernmae@bitbucket.org/cshintov/$reponame.git;
+    echo 'pushing';
+    git push -u origin --all;
+    git push -u origin --tags
+}
+createrepo () 
+{ 
+    reponame=$1;
+    is_private=$2;
+    mkdir $reponame;
+    cd $reponame;
+    git init;
+    echo my project initialization $reponame > README;
+    git add -A;
+    git commit -m "Initial Commit";
+    read -p 'Password?' -s password;
+    echo;
+    echo 'creating repo';
+    curl --user cshintov:$password https://api.bitbucket.org/2.0/repositories/cshintov/$reponame --data is_private='$isprivate';
+    echo 'adding remote origin';
+    git remote add origin git@bitbucket.org:cshintov/$reponame.git;
+    echo 'pushing';
+    git push -u origin --all;
+    git push -u origin --tags
+}
+createvenv () 
+{ 
+    python -m venv $VENV/$1;
+    source $VENV/$1/bin/activate
+    pip install --upgrade pip
+}
+delall () 
+{ 
+    find $1 -regex $2 -exec rm -rf {} +
+}
+deldirs () 
+{ 
+    find $1 -regex $2 -type d -exec rm -rf {} +
+}
+delfiles () 
+{ 
+    find $1 -regex $2 -type f -exec rm -rf {} +
+}
+delrepo () 
+{ 
+    read -r -p "Are you sure? [y/N] " response;
+    read -p 'Password?' -s password;
+    case $response in 
+        [yY][eE][sS] | [yY])
+            echo;
+            echo deleting the repo $1 .....;
+            curl -X DELETE --user cshintov:$password https://api.bitbucket.org/2.0/repositories/cshintov/$1;
+            rm -rf $1
+        ;;
+        *)
+            exit 1
+        ;;
+    esac
+}
+dequote () 
+{ 
+    eval printf %s "$1" 2> /dev/null
+}
+desc_cluster () 
+{ 
+    aws emr describe-cluster --cluster-id $1 | grep --color=auto State
+}
+fetch_branch () 
+{ 
+    git fetch $1 $2:$3;
+    git checkout $2
+}
+frb () 
+{ 
+    if [ "$1" == "" ]; then
+        read -p 'branch? ' branch;
+    else
+        branch=$1;
+    fi;
+    git fetch origin $branch;
+    git checkout $branch
+}
+gitdiff () 
+{ 
+    git diff-index $1 --binary > $2
+}
+gitupd () 
+{ 
+    git fetch upstream;
+    git rebase upstream/master
+}
+installKubectl () 
+{ 
+    curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl;
+    chmod +x ./kubectl;
+    sudo mv ./kubectl /usr/local/bin/
+}
+installMinikube () 
+{ 
+    curl -Lo minikube https://storage.googleapis.com/minikube/releases/v0.22.2/minikube-linux-amd64;
+    chmod +x minikube;
+    sudo mv minikube /usr/local/bin/
+}
+jupyterkafka () 
+{ 
+    /home/shinto/shinto/spark210/bin/pyspark --master local[*] --packages org.apache.hadoop:hadoop-aws:2.7.2,org.apache.spark:spark-streaming-kafka-0-8_2.11:2.1.0
+}
+jupyterstream () 
+{ 
+    /home/shinto/shinto/spark210/bin/pyspark --master local[*] --packages org.apache.spark:spark-streaming-kinesis-asl_2.11:2.1.0,com.amazonaws:aws-java-sdk-pom:1.10.34,org.apache.hadoop:hadoop-aws:2.7.2
+}
+k8sDeleteServices () 
+{ 
+    kubectl delete -f reader/;
+    kubectl delete -f account/;
+    kubectl delete -f gateway/;
+    kubectl delete -f devops/;
+    sleep 5 && watchall && startServices && watchall
+}
+k8sRestartService () 
+{ 
+    kubectl delete -f $1/;
+    sleep 5;
+    kubectl apply -f $1/ --record=true
+}
+k8sStartServices () 
+{ 
+    kubectl apply -f reader/ --record=true;
+    kubectl apply -f account/ --record=true;
+    kubectl apply -f gateway/ --record=true;
+    watchall
+}
+kafka () 
+{ 
+    /home/shinto/shinto/spark210/bin/spark-submit --master local[*] --packages org.apache.spark:spark-streaming-kafka-0-8_2.11:2.1.0 kafka.py
+}
+kincreate () 
+{ 
+    aws kinesis create-stream --stream-name $1 --shard-count $2
+}
+kindel () 
+{ 
+    aws kinesis delete-stream --stream-name $1
+}
+kindesc () 
+{ 
+    aws kinesis describe-stream --stream-name $1
+}
+kinls () 
+{ 
+    aws kinesis list-streams
+}
+kinputrec () 
+{ 
+    aws kinesis put-record --stream-name $1 --partition-key $2 --data $3
+}
+kuberesources () 
+{ 
+    set -euo pipefail;
+    echo -e "Iterating...\n";
+    nodes=$(kubectl get node --no-headers -o custom-columns=NAME:.metadata.name);
+    for node in $nodes;
+    do
+        echo "Node: $node";
+        kubectl describe node "$node" | sed '1,/Non-terminated Pods/d';
+        echo;
+    done
+}
+makeDirsUnExecutable () 
+{ 
+    sudo chmod o-rw $1/*
+}
+makeFilesUnExecutable () 
+{ 
+    sudo chmod -x $(find $1 -executable -type f)
+}
+marcToXml () 
+{ 
+    source /home/shinto/shinto/virtualenvs/marc/bin/activate;
+    python /home/shinto/shinto/myrepos/new/ezmarc-new/marc-to-marcxml/marctoxml.py --path=$1 --out=$2
+}
+mcd () 
+{ 
+    mkdir $1;
+    cl $1
+}
+misc () 
+{ 
+    mv $1 ~/shinto/miscellaneous
+}
+mp4tomp3 () 
+{ 
+    ffmpeg -i $1 -vn -acodec libmp3lame -ac 2 -ab 160k -ar 48000 $2
+}
+mywatch () 
+{ 
+    while true; do
+        $@;
+        sleep 2;
+    done
+}
+openSonarReport () 
+{ 
+    mv ~/Downloads/Sonar*$1*text /tmp/sonar.tar.gz;
+    cd /tmp;
+    tar -xvf sonar.tar.gz;
+    xdg-open .sonarlint/sonarlint-report.html;
+    cd -
+}
+parse_git_branch () 
+{ 
+    git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/ (\1)/'
+}
+prepend () 
+{ 
+    cat <(echo $1) $2 > /tmp/out.txt && mv /tmp/out.txt $2
+}
+prettyjson_f () 
+{ 
+    python -m json.tool "$1"
+}
+prettyjson_s () 
+{ 
+    echo '$1' | python -m json.tool
+}
+prettyjson_w () 
+{ 
+    eval "$1" | python -m json.tool
+}
+pushall () 
+{ 
+    if [ -z "$1" ]; then
+        read -p 'to which branch? ' branch;
+    else
+        branch=$1;
+    fi;
+    read -p 'commit message: ' message;
+    add-commit "$message";
+    if [ "$?" -ne 0 ]; then
+        echo 'error committing!';
+    else
+        echo 'successfully committed!';
+    fi;
+    push origin $branch
+}
+quote () 
+{ 
+    local quoted=${1//\'/\'\\\'\'};
+    printf "'%s'" "$quoted"
+}
+quote_readline () 
+{ 
+    local quoted;
+    _quote_readline_by_ref "$1" ret;
+    printf %s "$ret"
+}
+rmext () 
+{ 
+    find ./ -type f -name "*\.$1" -delete
+}
+spknote () 
+{ 
+    cd $spark_projects;
+    PYSPARK_DRIVER_PYTHON=ipython PYSPARK_DRIVER_PYTHON_OPTS=notebook ${SPARK_HOME}/bin/pyspark
+}
+spknote_aws () 
+{ 
+    PYSPARK_DRIVER_PYTHON=jupyter PYSPARK_DRIVER_PYTHON_OPTS=notebook ${SPARK_HOME}/bin/pyspark --packages org.apache.hadoop:hadoop-aws:2.7.2,com.amazonaws:aws-java-sdk-pom:1.10.34 --jars /home/shinto/shinto/spark210/jars/postgresql-42.0.0.jar
+}
+squash () 
+{ 
+    git reset --soft HEAD~$1;
+    git merge --squash HEAD@{1};
+    git add -A;
+    git commit;
+    git push origin HEAD -f
+}
+ssh_cluster () 
+{ 
+    aws emr ssh --cluster-id $1 --key-pair-file /var/www/keys/krishna123.pem
+}
+start_cluster () 
+{ 
+    aws emr create-cluster --name "spark-batch-cluster" --release-label emr-5.4.0 --applications Name=Spark --log-uri s3://krishnaraj-fuse/emr/logs/ --ec2-attributes KeyName=krishna123 --instance-type m1.large --instance-count 1 --use-default-roles
+}
+startsparkstream () 
+{ 
+    /home/shinto/shinto/spark210/bin/spark-submit --master local[*] --packages org.apache.spark:spark-streaming-kinesis-asl_2.11:2.1.0,com.amazonaws:aws-java-sdk-pom:1.10.34,org.apache.hadoop:hadoop-aws:2.7.2 /home/shinto/shinto/sparkproj/spark_streaming/avg_bytes_received.py $1 $2 https://kinesis.us-east-1.amazonaws.com/ us-east-1
+}
+stop_cluster () 
+{ 
+    aws emr terminate-clusters --cluster-ids $1
+}
+sync_repo () 
+{ 
+    git fetch upstream;
+    git rebase upstream/$1;
+    git push origin $1;
+    git push duplicate $1
+}
+uninstall () 
+{ 
+    sudo apt-get remove --purge "^$1.*";
+    sudo apt-get autoremvoe --purge
+}
+uninstallVBox () 
+{ 
+    sudo apt-get remove --purge virtualbox;
+    sudo rm ~/"VirtualBox VMs" -Rf;
+    sudo rm ~/.config/VirtualBox/ -Rf
+}
+untrack () 
+{ 
+    git update-index --assume-unchanged $1;
+    git rm -r --cached $1
+}
+validateJenkinsfile () 
+{ 
+    JENKINS_URL="http://localhost:8080";
+    AUTH=cshintov:myjenkins
+    echo $JENKINS_URL;
+    JENKINS_CRUMB=`curl -u $AUTH "$JENKINS_URL/crumbIssuer/api/xml?xpath=concat(//crumbRequestField,\":\",//crumb)"`;
+    echo $JENKINS_CRUMB;
+    curl -u $AUTH \
+        -X POST -H $JENKINS_CRUMB -F "jenkinsfile=<$1" $JENKINS_URL/pipeline-model-converter/validate
+}
+venvact () 
+{ 
+    source ~/shinto/virtualenvs/$1/bin/activate
+}
+xfile () 
+{ 
+    touch $1;
+    chmod +x $1;
+    vim $1
+}
+drembranch () {
+    git push origin :$1
+}
+
+dkrbash () {
+    docker exec -it $1 /bin/bash;
+}
+
+open () {
+    xdg-open $1 > /dev/null 2>&1
+}
+
+
+ecrtag () {
+    docker tag test-service:$1 453168209999.dkr.ecr.us-west-1.amazonaws.com/test-service:$2
+}
+
+ecrpush () {
+    docker push 453168209999.dkr.ecr.us-west-1.amazonaws.com/test-service:$1
+}
+
+ecrlogin () {
+    aws ecr get-login --no-include-email --region us-west-1
+}
+
+dkrip () {
+    docker inspect $1 -f "{{json .NetworkSettings.IPAddress}}"
+}
+
+function addNodesToSC {
+        groupId=sg-0ab10c78
+        IPS=$(aws ec2 describe-instances --filter  "Name=instance.group-id,Values=sg-88a03ef1" | jq ".Reservations[] | .Instances[]| .PublicIpAddress")
+
+        for ip in $IPS
+        do
+                stripquotes=$(eval echo $ip)
+                aws ec2 --region us-east-1 authorize-security-group-ingress --protocol tcp --port 3306 --cidr $stripquotes/32 --group-id $groupId
+        done
+
+}
+
+function removeNodesFromSC {
+        groupId=sg-0ab10c78
+        IPS=$(aws ec2 describe-instances --filter  "Name=instance.group-id,Values=sg-88a03ef1" | jq ".Reservations[] | .Instances[]| .PublicIpAddress")
+
+        for ip in $IPS
+        do
+                stripquotes=$(eval echo $ip)
+                aws ec2 --region us-east-1 revoke-security-group-ingress --protocol tcp --port 3306 --cidr $stripquotes/32 --group-id $groupId
+        done
+
+}
+
+function copyremote {
+    git remote get-url $1 | pbcopy
+}
+function genPassword {
+    date | md5sum | cut -c1-$1
+}
+
+
+# tmux
+resurrect="$HOME/.tmux/resurrect/"
+checkpoints="$resurrect/checkpoints"
+
+function tmux-sessions {
+    echo "Available sessions:"
+    ls $checkpoints
+}
+
+function switch-tmux-session {
+    tmux-sessions
+    read -p "Which session?: " session
+    echo "You chose $session"
+    mv $resurrect/{last,last_backup} 
+    cp $checkpoints/$session.txt $resurrect/last 
+    sleep 3s
+    tmux kill-session
+}
+
+
+# make
+function list-targets {
+    make -pRrq -f Makefile : 2>/dev/null \
+        | awk -v RS= -F: \
+        '/^# File/,/^# Finished Make data base/ {if ($$1 !~ "^[#.]") {print $$1}}' \
+        | sort | egrep -v -e '^[^[:alnum:]]' -e '^$@$$'
+}
+
+# git
+
+function merge-to {
+    last_branch=$(git rev-parse --abbrev-ref HEAD) 
+    echo "last branch: $last_branch"
+    git checkout $1 
+    git merge $last_branch
+    git checkout -
+}
+
+new-alias() {
+  local last_command=$(echo `history |tail -n2 |head -n1` | sed 's/[0-9]* //')
+  echo alias $1="'""$last_command""'" 
+  echo alias $1="'""$last_command""'" >> ~/.aliases/bash_aliases
+  source ~/aliases/.bash_aliases
+}
+
+function timer_start {
+  timer=${timer:-$SECONDS}
+}
+
+function timer_stop {
+  timer_show=$(($SECONDS - $timer)) 
+  unset timer
+}
+
+function time_prompt {
+    trap 'timer_start' DEBUG
+    PROMPT_COMMAND=timer_stop
+    export PS1="\[`tput smso`\]\D{%Y} \d \T \D{%p %Z}\[`tput rmso`\]\n\[`tput smso`\]\u@\h:\w $MACHTYPE $PPID\[`tput rmso`\]\n\n\[last: ${timer_show}s  \n$"
+}
+
+function ec {
+    vim $1; pbcopy $1;
+}
+
+function chkpoint {
+    session_name=$1
+    cp $(readlink -f ~/.tmux/resurrect/last) \
+        ~/.tmux/resurrect/checkpoints/$session_name.txt
+}
+
+function c3mclone {
+    host=git.c3m.io
+    tokenname=c3mgit
+    token="mMoBzwtFDC-eMdAiByvc"
+    repo=$(echo $1 | cut -d ":" -f2)
+
+    echo Cloning c3m $repo ...
+
+    git clone https://$tokenname:$token@$host/$repo
+
+    folder=$(echo $repo | cut -d '/' -f 2 | cut -d '.' -f1)
+    cd $folder
+
+    cat >> .git/config <<EOF
+[user]
+    email = shinto@c3m.io
+    name = Shinto C V
+EOF
+}
+
+function btcrate {
+    usd=$(curl -s https://blockchain.info/ticker | jq '.USD')
+    inr=$(curl -s https://blockchain.info/ticker | jq '.INR')
+
+    echo "$usd"
+    echo "$inr"
+    
+}
+
+function npmlogin {
+	npm login -registry=https://bin-repo.c3m.io/repository/npm/
+	user='bundler'
+	password='Cc3m#6644'
+	email='c3m-bundler@c3m.io'
+}
+
+how_in()
+{
+  where="$1"; shift
+  IFS=+ curl "https://cht.sh/$where/$*"
+}

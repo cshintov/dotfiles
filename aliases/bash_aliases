@@ -1,0 +1,279 @@
+alias dkb='xinput float'
+alias ekb='xinput attach'
+
+alias cv='cd /home/shinto/infracloud/workspace/personal/resumes/resume'
+
+# alias for browser-sync (with p5.js)
+alias bs='browser-sync start --server --files "*.js, *.html, *.css"'
+
+alias fda='fd -IH' # disable gitignore for fd
+alias rga='rg -uuu' # disable gitignore for ripgrep
+alias elr="cl ~/shinto/learn/competitive/euler/"
+
+# aliases
+alias uals='source ~/.aliases/bash_aliases'
+alias als='vim -p ~/.aliases/bash_{aliases,functions}; uals'
+alias arc='vim ~/.bashrc; source ~/.bashrc'
+alias uarc='source ~/.bashrc'
+
+# source functions
+if [ -f ~/.aliases/bash_functions ]; then
+    . ~/.aliases/bash_functions
+fi
+
+# source profile
+if [ -f ~/.aliases/.profile ]; then
+    . ~/.aliases/.profile
+fi
+
+alias alf='vim ~/.aliases/bash_functions'
+
+# temporary
+alias ok?="echo $?"
+alias path="echo $PATH"
+alias striphtml="sed -e 's/<[^>]*>//g'"
+alias encam='sudo modprobe uvcvideo'
+alias grep='grep --color=auto'
+alias conezmarc="ssh shinto.cv@52.87.104.199" # ezomgilt1988"
+
+alias myip="curl ipinfo.io/ip"
+alias whois="dig +nostats +short -x"
+
+alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
+alias aws-docker-login='sudo $(aws ecr get-login --no-include-email --region us-west-1)'
+alias bk='cd ..; ls'
+alias c='clear'
+alias cb='open ~/shinto/books/func-prog/whyfp.pdf'
+alias cpd='cp -r'
+alias cploc='pwd | pbcopy'
+alias cpfile='pbcopy'
+alias cur='pushd /home/shinto/shinto/flaskapps/ezmarc-api-shinto/'
+alias deact='deactivate'
+alias deld='rmf -r'
+alias demouse='xinput --disable "USB Optical Mouse"'
+alias dirs='dirs -v'
+alias egrep='egrep --color=auto'
+alias enmouse='xinput --enable "USB Optical Mouse"'
+alias evimrc='vim ~/.vimrc'
+alias f='finish'
+alias fgrep='fgrep --color=auto'
+alias finish='sudo poweroff'
+alias gbks='pushd ~/shinto/books'
+alias gg='ping www.google.com'
+alias sghci='stack ghci --no-build'
+alias h='ghci'
+alias haskell='ghci'
+alias hipchat='hipchat&'
+alias ht='htop'
+alias jmeter='bash /home/shinto/shinto/softwares/apache-jmeter-3.3/bin/jmeter'
+alias jnb='jupyter notebook'
+alias jp='jupyter'
+alias k8sres='kubectl describe nodes | grep -A 2 -e "^\\s*CPU Requests"'
+alias l='ls -CF'
+alias la='ls -A'
+alias listf='compgen -A function'
+alias ll='ls -alF'
+alias ls='ls --color=auto'
+alias lsd='ls -d */'
+alias ma='source ~/shinto/virtualenvs/marc/bin/activate'
+alias mand='cat ~/temp/mandukyopanishat.txt'
+alias me='mono /opt/marc/marcedit/MarcEdit.exe&'
+alias me7='sudo mono /opt/marc/marcedit7/MarcEdit.exe&'
+alias mvim='vim -p'
+alias neo='sudo /opt/neo4j/bin/neo4j'
+alias neocon='/opt/Neo4j/bin/neo4j console&'
+# alias open='gnome-open'
+alias pbcopy='DISPLAY=:0 xclip -selection clipboard'
+alias pd='pushd'
+alias pl='plan.py'
+alias pp='pushd; ls'
+alias py='python'
+alias py3='python3'
+alias pys='/home/shinto/shinto/spark-2.1.0-bin-hadoop2.7/bin/pyspark'
+alias pytestc='pytest --capture=fd'
+alias q='quit'
+alias qfirefox='qfirefox -P'
+alias quit='guake -q'
+alias r='sudo reboot'
+alias rb='sudo reboot now'
+alias remswap='find ./ -type f -name "\.*sw[klmnop]" -delete'
+alias rmd='rm -rf'
+alias rmf='rm -f'
+alias rs='source ~/shinto/virtualenvs/recsys/bin/activate'
+alias stopcelery='ps auxww | grep '\''celery worker'\'' | awk '\''{print }'\'' | xargs kill -9'
+alias sentact='source ~/shinto/virtualenvs/sentinel/bin/activate'
+alias shareLocalHost='ssh -R 80:localhost:5000 -p 2222 ssh.localhost.run'
+alias size='du -sh '
+alias svim='sudo vim'
+alias update='sudo apt-get update && sudo apt-get upgrade'
+alias whats='dict'
+alias x='exit'
+alias can='cat -n'
+alias stopcelery="ps auxww | grep 'celery worker' | awk '{print }' | xargs kill -9"
+
+alias genswaggerjson="sudo docker run --name swcodegen -v /home/shinto/shinto/myrepos/new/phoenix-new/phoenix-api-docs/docs:/docs swaggerapi/swagger-codegen-cli generate -i /docs/dams.yml -l swagger -o /docs"
+
+alias dkrimages='docker images'
+alias dkrstop='docker stop'
+alias dkrexited='docker ps -f "status=exited"'
+alias dkrlogs='docker logs'
+alias dkrps='docker ps'
+alias dkrcommand='docker inspect  -f "{{.Name}} {{.Config.Cmd}}"'
+
+alias wlupdate='vim ~/shinto/worklog.jira'
+alias javaalt='sudo update-alternatives --config java'
+
+alias hul="sudo gsettings set org.compiz.unityshell:/org/compiz/profiles/unity/plugins/unityshell/ launcher-hide-mode 1"
+alias uhul="sudo gsettings set org.compiz.unityshell:/org/compiz/profiles/unity/plugins/unityshell/ launcher-hide-mode 0"
+alias backup="sudo dd if=/dev/sda3 ibs=1M conv=sync,notrunc,noerror | (ssh 172.16.5.92 dd of=/home/shinto/backup/oldmachine.img obs=1M)"
+
+
+alias dry="docker run -it -v /var/run/docker.sock:/var/run/docker.sock moncho/dry"
+alias sen="docker run -v /var/run/docker.sock:/run/docker.sock -ti -e TERM tomastomecek/sen"
+
+alias tor="docker run -it -p 8118:8118 -p 9050:9050 -d dperson/torproxy"
+
+alias gunzipfolder="find . -name "*.gz" -exec gunzip {} \;"
+
+alias pgadmin="docker run -p 80:80 -e PGADMIN_DEFAULT_EMAIL=cshintov@gmail.com -e PGADMIN_DEFAULT_PASSWORD=mypass -d dpage/pgadmin4"
+
+# git commands
+alias g='git'
+alias ga='g add'
+alias gm='g commit'
+alias gc='g checkout'
+alias gd='g diff'
+alias gl='g log'
+alias gb='g branch'
+alias ghd='g rev-parse --abbrev-ref HEAD'
+alias gp='g push origin $(ghd)'
+alias gpl='g pull origin'
+alias gs='g status'
+alias sa='g stash apply'
+alias sd='g stash drop'
+alias sh='g stash'
+alias sl='g stash list'
+alias sp='g stash pop'
+
+alias glg='g log --oneline --graph --decorate --all'
+
+alias gaa='g add -A'
+alias gac='g add -A && g commit'
+alias gacm='gac -m'
+alias gaca='gac --amend'
+alias gacam='gac --amend -m'
+alias gacp='gac --amend --no-edit && gp -f'
+alias gacne='gac --amend --no-edit'
+alias gacap='gac --amend && gp -f'
+alias gu='gacne && gp -f'
+
+alias gbk='g checkout -'
+alias gbr='g branch -r'
+alias gcb='g checkout -b'
+alias gcp='g stash; g stash apply'
+alias glo='g log --oneline'
+alias glo5='g log --oneline -5'
+alias glo10='g log --oneline -10'
+
+alias ggf='g log --graph --decorate --oneline'
+alias ggfs='g log --graph --all --simplify-by-decoration'
+
+alias dlocbranch='g branch -D'
+alias deltag="g tag | xargs g tag -d"
+
+alias getbranch='g symbolic-ref HEAD --short | pbcopy'
+
+alias gmt="merge-to"
+
+# kubernetes
+
+# kubectl
+alias k="kubectl"
+alias kg="k get"
+alias kl="k logs"
+alias kd="k delete"
+alias ks="k describe"
+alias kt="k exec"
+alias ke="k edit"
+
+alias kgp="k get pods"
+alias kgn="k get nodes"
+
+# kubetools
+alias kx="kubectl-ctx"
+alias kxb="kx -"
+alias kn="kubectl-ns"
+alias knb="kn -"
+
+# c3m
+c3m="/home/shinto/Work"
+alias gwk="cl $c3m"
+ovpnconfig="$c3m/docs/open-vpn-config.ovpn"
+alias conc3m="sudo openvpn --config $ovpnconfig"
+
+function tunnel() {
+    bastion=$1
+    worker=$2
+    pem=$3
+    ssh -tt $bastion "ssh -i $pem $worker"
+}
+
+# docker-compose
+alias dc="docker-compose"
+alias dce="dc exec"
+alias dcupd="docker-compose up -d"
+alias dcup="docker-compose up"
+alias dcdwn="docker-compose down"
+
+function dcs() {
+    dc exec $1 bash
+}
+
+# jenkins
+gitlabusertoken="116870896695d55b85ab61545bb2b48210"
+
+cshintov="11be66c0c797b9722d75e53d283d26bf6f"
+c3mtoken="11599852cdf914df6a463f3e28981a6faa"
+c3muser="shinto@c3m.io"
+local_jenkins="http://localhost:8080"
+c3m_jenkins="https://jenkins.c3m.io"
+
+export JENKINS_USER_ID=$c3muser
+export JENKINS_API_TOKEN=$c3mtoken
+export JENKINS_URL=$c3m_jenkins
+alias jenkins-cli="java -jar /usr/local/bin/jenkins-cli.jar -s $JENKINS_URL"
+
+# gitlab
+
+personal_token="GNn2Te82Jy9MnGtzs-ue"
+
+# tmux
+alias t='tmux'
+alias ta='t attach -t'
+alias tkp='t kill-pane'
+alias tks='t kill-session -t'
+alias tls='t list-sessions'
+alias tkw='t kill-window'
+alias sts='switch-tmux-session'
+alias tx='t kill-server'
+
+# make
+alias m='make'
+alias mh='m help'
+alias lmt='list-make-targets'
+
+# terraform
+alias tf='terraform'
+alias tfa='tf apply -auto-approve'
+alias tfd='tf destroy -auto-approve'
+
+# gcloud
+alias gk='gcloud'
+
+
+# tokens
+c3mgit="mMoBzwtFDC-eMdAiByvc"
+ghpackagetoken="6b9a2c697084576959f8b3c1275714b7fda4446b"
+
+# minikube
+alias mk='minikube'
