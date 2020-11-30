@@ -1,0 +1,12 @@
+let g:netrw_dirhistmax  =10
+let g:netrw_dirhistcnt =8
+let g:netrw_dirhist_8='/home/shinto/Learn/Projects/pygames/c4'
+let g:netrw_dirhist_7='/home/shinto/Learn/Projects/pygames'
+let g:netrw_dirhist_6='/home/shinto/Learn/Projects/pygames/tetris'
+let g:netrw_dirhist_5='/home/shinto/.local/share/nvim/plugged/vim-sneak/plugin'
+let g:netrw_dirhist_4='/home/shinto/dotfiles'
+let g:netrw_dirhist_3='/home/shinto/.config/coc/ultisnips'
+let g:netrw_dirhist_2='/home/shinto/Learn/Projects/pygames/c4/__pycache__'
+let g:netrw_dirhist_1='/home/shinto/Learn/Projects/pygames/racing'
+let g:netrw_dirhist_0='/home/shinto/Learn/Projects/pygames'
+let g:netrw_dirhist_9='/home/shinto/Learn/Projects/pygames/snake'
